@@ -8,8 +8,7 @@
 </head>
 <body>
 <h1>
-	<%-- ${e.message } --%>
-	${exception.message }
+	 ${e.message }
 </h1>
 </body>
 </html>

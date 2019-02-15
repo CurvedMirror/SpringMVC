@@ -1,10 +1,10 @@
 package cn.smbms.controller;
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,7 +16,7 @@ import cn.smbms.tools.Constants;
 @RequestMapping("/user")
 public class UserController{
 	private Logger logger = Logger.getLogger(UserController.class);
-	
+
 	@Autowired
 	private UserService userService;
 	
@@ -61,6 +61,11 @@ public class UserController{
 		}
 		return "redirect:/user/main.html";
 	}
+	/*@ExceptionHandler(value = {RuntimeException.class})
+	public String handlerException(RuntimeException e,HttpServletRequest request){
+		request.setAttribute("e",e);
+		return "error";
+	}*/
 	
 	@RequestMapping(value="/logout.html")
 	public String logout(HttpSession session){
