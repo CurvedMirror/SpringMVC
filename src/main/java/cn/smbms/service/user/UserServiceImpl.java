@@ -75,12 +75,6 @@ public class UserServiceImpl implements UserService{
 			BaseDao.closeResource(connection, null, null);
 		}
 
-		//匹配密码
-		if(null != user){
-			if(!user.getUserPassword().equals(userPassword))
-				user = null;
-		}
-
 		return user;
 	}
 	@Override

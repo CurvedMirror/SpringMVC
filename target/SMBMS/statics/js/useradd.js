@@ -51,7 +51,6 @@ $(function(){
 	});
 	
 	
-	
 	/*
 	 * 验证
 	 * 失焦\获焦
@@ -60,7 +59,7 @@ $(function(){
 	userCode.bind("blur",function(){
 		//ajax后台验证--userCode是否已存在
 		//user.do?method=ucexist&userCode=**
-		$.ajax({
+		/*$.ajax({
 			type:"GET",//请求类型
 			url:path+"/jsp/user.do",//请求的url
 			data:{method:"ucexist",userCode:userCode.val()},//请求参数
@@ -75,14 +74,14 @@ $(function(){
 			error:function(data){//当访问时候，404，500 等非200的错误状态码
 				validateTip(userCode.next(),{"color":"red"},imgNo+" 您访问的页面不存在",false);
 			}
-		});
+		});*/
 		
 		
 	}).bind("focus",function(){
 		//显示友情提示
 		validateTip(userCode.next(),{"color":"#666666"},"* 用户编码是您登录系统的账号",false);
 	}).focus();
-	
+
 	userName.bind("focus",function(){
 		validateTip(userName.next(),{"color":"#666666"},"* 用户名长度必须是大于1小于10的字符",false);
 	}).bind("blur",function(){
@@ -150,7 +149,7 @@ $(function(){
 	});
 	
 	addBtn.bind("click",function(){
-		if(userCode.attr("validateStatus") != "true"){
+		/*if(userCode.attr("validateStatus") != "true"){
 			userCode.blur();
 		}else if(userName.attr("validateStatus") != "true"){
 			userName.blur();
@@ -164,11 +163,11 @@ $(function(){
 			phone.blur();
 		}else if(userRole.attr("validateStatus") != "true"){
 			userRole.blur();
-		}else{
-			if(confirm("是否确认提交数据")){
-				$("#userForm").submit();
-			}
-		}
+		}else{*/
+        if (confirm("是否确认提交数据")) {
+            $("#userForm").submit();
+        }
+		/*}*/
 	});
 	
 	backBtn.on("click",function(){

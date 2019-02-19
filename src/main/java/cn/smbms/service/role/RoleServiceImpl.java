@@ -7,7 +7,9 @@ import cn.smbms.dao.BaseDao;
 import cn.smbms.dao.role.RoleDao;
 import cn.smbms.dao.role.RoleDaoImpl;
 import cn.smbms.pojo.Role;
+import org.springframework.stereotype.Service;
 
+@Service
 public class RoleServiceImpl implements RoleService{
 	
 	private RoleDao roleDao;

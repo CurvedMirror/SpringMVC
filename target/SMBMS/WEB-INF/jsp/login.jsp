@@ -19,7 +19,7 @@
     </header>
     <section class="loginCont">
         <form class="loginForm" action="${pageContext.request.contextPath }/user/dologin.html"  name="actionForm" id="actionForm"  method="post" >
-            <div class="info">${error }</div>
+            <div class="info">${exception.message}</div>
             <div class="inputbox">
                 <label for="user">用户名：</label>
                 <input type="text" class="input-text" id="userCode" name="userCode" placeholder="请输入用户名" required/>

@@ -11,7 +11,9 @@ import cn.smbms.dao.provider.ProviderDao;
 import cn.smbms.dao.provider.ProviderDaoImpl;
 import cn.smbms.pojo.Provider;
 import cn.smbms.pojo.User;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ProviderServiceImpl implements ProviderService {
 	
 	private ProviderDao providerDao;
