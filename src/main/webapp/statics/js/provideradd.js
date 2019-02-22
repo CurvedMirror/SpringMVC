@@ -2,7 +2,7 @@ var proCode = null;
 var proName = null;
 var proContact = null;
 var proPhone = null;
-var addBtn = null;
+var addBtn = null;手机
 var backBtn = null;
 
 $(function(){

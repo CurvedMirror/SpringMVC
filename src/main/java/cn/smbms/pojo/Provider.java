@@ -1,14 +1,20 @@
 package cn.smbms.pojo;
 
 import java.util.Date;
+import javax.validation.constraints.Pattern;
+import org.hibernate.validator.constraints.NotEmpty;
 
 public class Provider {
-	
+
 	private Integer id;   //id
+	@NotEmpty(message="供应商编码不能为空")
 	private String proCode; //供应商编码
+	@NotEmpty(message="供应商名称不能为空")
 	private String proName; //供应商名称
 	private String proDesc; //供应商描述
+	@NotEmpty(message="联系人不能为空")
 	private String proContact; //供应商联系人
+	@Pattern(regexp="^(13[0-9]|15[0-9]|18[0-9])\\d{8}$",message="请输入正确格式的手机号")
 	private String proPhone; //供应商电话
 	private String proAddress; //供应商地址
 	private String proFax; //供应商传真
@@ -16,7 +22,27 @@ public class Provider {
 	private Date creationDate; //创建时间
 	private Integer modifyBy; //更新者
 	private Date modifyDate;//更新时间
-	public Integer getId() {
+	private String companyLicPicPath;//企业营业执照的存储路径
+	private String orgCodePicPath;//组织机构代码证
+
+
+    public String getOrgCodePicPath() {
+        return orgCodePicPath;
+    }
+
+    public void setOrgCodePicPath(String orgCodePicPath) {
+        this.orgCodePicPath = orgCodePicPath;
+    }
+
+    public String getCompanyLicPicPath() {
+        return companyLicPicPath;
+    }
+
+    public void setCompanyLicPicPath(String companyLicPicPath) {
+        this.companyLicPicPath = companyLicPicPath;
+    }
+
+    public Integer getId() {
 		return id;
 	}
 	public void setId(Integer id) {
@@ -88,6 +114,6 @@ public class Provider {
 	public void setModifyDate(Date modifyDate) {
 		this.modifyDate = modifyDate;
 	}
-	
-	
+
+
 }

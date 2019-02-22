@@ -18,6 +18,9 @@ public class User {
 	private Date creationDate; //创建时间
 	private Integer modifyBy;     //更新者
 	private Date modifyDate;   //更新时间
+	private String idPicPath;//证件照路径
+	private  String workPicPath;//工作证照片路径
+
 
 	private Integer age;//年龄
 
@@ -41,6 +44,23 @@ public class User {
 		this.modifyBy = modifyBy;
 		this.modifyDate = modifyDate;
 	}
+
+	public String getIdPicPath() {
+		return idPicPath;
+	}
+
+	public void setIdPicPath(String idPicPath) {
+		this.idPicPath = idPicPath;
+	}
+
+	public String getWorkPicPath() {
+		return workPicPath;
+	}
+
+	public void setWorkPicPath(String workPicPath) {
+		this.workPicPath = workPicPath;
+	}
+
 	public String getUserRoleName() {
 		return userRoleName;
 	}
@@ -131,5 +151,28 @@ public class User {
 	}
 	public void setModifyDate(Date modifyDate) {
 		this.modifyDate = modifyDate;
+	}
+
+	@Override
+	public String toString() {
+		return "User{" +
+				"id=" + id +
+				", userCode='" + userCode + '\'' +
+				", userName='" + userName + '\'' +
+				", userPassword='" + userPassword + '\'' +
+				", gender=" + gender +
+				", birthday=" + birthday +
+				", phone='" + phone + '\'' +
+				", address='" + address + '\'' +
+				", userRole=" + userRole +
+				", createdBy=" + createdBy +
+				", creationDate=" + creationDate +
+				", modifyBy=" + modifyBy +
+				", modifyDate=" + modifyDate +
+				", idPicPath='" + idPicPath + '\'' +
+				", workPicPath='" + workPicPath + '\'' +
+				", age=" + age +
+				", userRoleName='" + userRoleName + '\'' +
+				'}';
 	}
 }

@@ -27,11 +27,12 @@ public class UserDaoImpl implements UserDao{
 		int updateRows = 0;
 		if(null != connection){
 			String sql = "insert into smbms_user (userCode,userName,userPassword," +
-					"userRole,gender,birthday,phone,address,creationDate,createdBy) " +
-					"values(?,?,?,?,?,?,?,?,?,?)";
+					"userRole,gender,birthday,phone,address,creationDate,createdBy,idPicPath,workPicPath) " +
+					"values(?,?,?,?,?,?,?,?,?,?,?,?)";
 			Object[] params = {user.getUserCode(),user.getUserName(),user.getUserPassword(),
 							user.getUserRole(),user.getGender(),user.getBirthday(),
-							user.getPhone(),user.getAddress(),user.getCreationDate(),user.getCreatedBy()};
+							user.getPhone(),user.getAddress(),user.getCreationDate(),user.getCreatedBy(),user.getIdPicPath(),
+							user.getWorkPicPath()};
 			updateRows = BaseDao.execute(connection, pstm, sql, params);
 			BaseDao.closeResource(null, pstm, null);
 		}

@@ -46,12 +46,12 @@ $(function(){
 	$(".viewProvider").on("click",function(){
 		//将被绑定的元素（a）转换成jquery对象，可以使用jquery方法
 		var obj = $(this);
-		window.location.href=path+"/jsp/provider.do?method=view&proid="+ obj.attr("proid");
+		window.location.href=path+"/provider/view/"+ obj.attr("proid");
 	});
 	
 	$(".modifyProvider").on("click",function(){
 		var obj = $(this);
-		window.location.href=path+"/jsp/provider.do?method=modify&proid="+ obj.attr("proid");
+		window.location.href=path+"/provider/modify/"+ obj.attr("proid");
 	});
 
 	$('#no').click(function () {
