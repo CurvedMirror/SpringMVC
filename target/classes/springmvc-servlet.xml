@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	   xmlns:mvc="http://www.springframework.org/schema/mvc"
-	   xmlns:p="http://www.springframework.org/schema/p"
-	   xmlns:context="http://www.springframework.org/schema/context"
-	   xsi:schemaLocation="
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
         http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context
@@ -12,10 +12,10 @@
         http://www.springframework.org/schema/mvc
         http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
-	<mvc:annotation-driven/>
-	<context:component-scan base-package="cn.smbms.controller"/>
-	<mvc:default-servlet-handler/>
-	<!--配置多视图解析器：允许同样的内容数据呈现不同的view-->
+    <!--<mvc:annotation-driven/>-->
+    <context:component-scan base-package="cn.smbms.controller"/>
+    <mvc:default-servlet-handler/>
+    <!--配置多视图解析器：允许同样的内容数据呈现不同的view-->
     <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
         <property name="favorParameter" value="true"/>
         <property name="defaultContentType" value="text/html"/>
@@ -35,26 +35,59 @@
             </list>
         </property>
     </bean>
-<!--	<mvc:resources mapping="/statics/**" location="/statics/"/>-->
-	<!-- 完成视图的对应 -->
-	<!-- 对转向页面的路径解析。prefix：前缀， suffix：后缀 -->
-	<!--<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" >
-		<property name="prefix" value="/WEB-INF/jsp/"/>
-		<property name="suffix" value=".jsp"/>
-	</bean>-->
+    <!--	<mvc:resources mapping="/statics/**" location="/statics/"/>-->
+    <!-- 完成视图的对应 -->
+    <!-- 对转向页面的路径解析。prefix：前缀， suffix：后缀 -->
+    <!--<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" >
+        <property name="prefix" value="/WEB-INF/jsp/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>-->
 
-	<!--全局异常处理-->
-	<bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
-		<property name="exceptionMappings">
-			<props>
-				<prop key="java.lang.RuntimeException">login</prop>
-			</props>
-		</property>
-	</bean>
-	<!--配置MultipartResolver，用于上传文件，使用spring的CommonsMultipartResolver-->
-	<bean id="multipartResolver"
-	class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+    <!--全局异常处理-->
+    <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+        <property name="exceptionMappings">
+            <props>
+                <prop key="java.lang.RuntimeException">login</prop>
+            </props>
+        </property>
+    </bean>
+    <!--配置MultipartResolver，用于上传文件，使用spring的CommonsMultipartResolver-->
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
         <property name="maxInMemorySize" value="5000000"/>
         <property name="defaultEncoding" value="UTF-8"/>
-	</bean>
+    </bean>
+    <!--配置消息转换器-->
+    <mvc:annotation-driven>
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>application/json;charset=UTF-8</value>
+                    </list>
+                </property>
+            </bean>
+            <bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>text/html;charset=UTF-8</value>
+                        <value>application/json</value>
+                    </list>
+                </property>
+                <property name="features">
+                    <list>
+                        <!--   Date的日期转换器 -->
+                        <value>WriteDateUseDateFormat</value>
+                    </list>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+    <!--自定义系统拦截器-->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/sys/**"/>
+            <bean class="cn.smbms.interceptor.SysInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
 </beans>

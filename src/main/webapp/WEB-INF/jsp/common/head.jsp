@@ -33,7 +33,7 @@
                  <li ><a href="${pageContext.request.contextPath }/jsp/bill.do?method=query">订单管理</a></li>
               <li><a href="${pageContext.request.contextPath }/provider/providerList.html">供应商管理</a></li>
               <li><a href="${pageContext.request.contextPath }/user/userlist.html">用户管理</a></li>
-              <li><a href="${pageContext.request.contextPath }/jsp/pwdmodify.jsp">密码修改</a></li>
+              <li><a href="${pageContext.request.contextPath }/user/pwdmodify.html">密码修改</a></li>
               <li><a href="${pageContext.request.contextPath }/user/logout.html">退出系统</a></li>
              </ul>
          </nav>
