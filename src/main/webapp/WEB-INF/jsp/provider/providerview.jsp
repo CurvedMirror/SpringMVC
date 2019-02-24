@@ -20,7 +20,7 @@
                     暂无
                 </c:when>
                 <c:otherwise>
-                    <img src="${pageContext.request.contextPath}${provider.companyLicPicPath}"/>
+                    <img src="${pageContext.request.contextPath}/statics/uploadfiles/${provider.companyLicPicPath}"/>
                 </c:otherwise>
             </c:choose>
             </span></p>
@@ -30,7 +30,7 @@
                     暂无
                 </c:when>
                 <c:otherwise>
-                    <img src="${pageContext.request.contextPath}${provider.orgCodePicPath}"/>
+                    <img src="${pageContext.request.contextPath}/statics/uploadfiles/${provider.orgCodePicPath}"/>
                 </c:otherwise>
             </c:choose>
             </span></p>

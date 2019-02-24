@@ -49,6 +49,12 @@
                 <input type="file" name="attachs" id="a_companyLicPicPath"/>
                 <font color="red"></font>
             </div>
+            <div>
+                <input type="hidden" id="errorocinfo" value="${uploadOcError}"/>
+                <label for="orgCodePicPath">企业营业执照：</label>
+                <input type="file" name="attachs" id="orgCodePicPath"/>
+                <font color="red"></font>
+            </div>
             <div class="providerAddBtn">
                 <input type="submit" name="add" id="add" value="保存">
                 <input type="button" id="back" name="back" value="返回" >

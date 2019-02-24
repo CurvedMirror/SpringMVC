@@ -114,9 +114,9 @@ public class ProviderController {
                         return "provider/provideradd";
                     }
                     if (i == 0) {
-                        companyLicPicPath = "/statics" + File.separator + "uploadfiles"+File.separator+fileName;
+                        companyLicPicPath = fileName;
                     } else if (i == 1) {
-                        orgCodePicPath = "/statics" + File.separator + "uploadfiles"+File.separator+ fileName;
+                        orgCodePicPath = fileName;
                     }
 
                 } else {

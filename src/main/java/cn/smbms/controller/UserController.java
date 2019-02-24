@@ -212,9 +212,10 @@ public class UserController {
                         flag = false;
                     }
                     if (i == 0) {
-                        idPicPath = path + File.separator + fileName;
+                        idPicPath = fileName;
+
                     } else if (i == 1) {
-                        workPicPath = path + File.separator + fileName;
+                        workPicPath = fileName;
                     }
                     logger.debug("idPicPath:" + idPicPath);
                     logger.debug("workPicPath:" + workPicPath);
@@ -255,52 +256,77 @@ public class UserController {
         return JSONArray.toJSONString(resultMap);
     }
 
-    @RequestMapping(value="/pwdmodify.html",method=RequestMethod.GET)
-    public String pwdModify(HttpSession session){
-        if(session.getAttribute(Constants.USER_SESSION) == null){
+    @RequestMapping(value = "/pwdmodify.html", method = RequestMethod.GET)
+    public String pwdModify(HttpSession session) {
+        if (session.getAttribute(Constants.USER_SESSION) == null) {
             return "redirect:/user/login.html";
         }
         return "user/pwdmodify";
     }
 
-    @RequestMapping(value = "/pwdmodify.json", method=RequestMethod.POST)
+    @RequestMapping(value = "/pwdmodify.json", method = RequestMethod.POST)
     @ResponseBody
-    public Object getPwdByUserID(@RequestParam String oldpassword,HttpSession session){
-        HashMap<String,String> resultMap = new HashMap<>();
-        if (null == session.getAttribute(Constants.USER_SESSION)){
-            resultMap.put("result","sessionerror");
-        }else if (StringUtils.isNullOrEmpty(oldpassword)){
-            resultMap.put("result","error");
-        }else {
-            String sessionPwd = ((User)session.getAttribute(Constants.USER_SESSION)).getUserPassword();
-            if (!sessionPwd.equals(oldpassword)){
-                resultMap.put("result","false");
-            }else {
-                resultMap.put("result","true");
+    public Object getPwdByUserID(@RequestParam String oldpassword, HttpSession session) {
+        HashMap<String, String> resultMap = new HashMap<>();
+        if (null == session.getAttribute(Constants.USER_SESSION)) {
+            resultMap.put("result", "sessionerror");
+        } else if (StringUtils.isNullOrEmpty(oldpassword)) {
+            resultMap.put("result", "error");
+        } else {
+            String sessionPwd = ((User) session.getAttribute(Constants.USER_SESSION)).getUserPassword();
+            if (!sessionPwd.equals(oldpassword)) {
+                resultMap.put("result", "false");
+            } else {
+                resultMap.put("result", "true");
             }
         }
         return JSONArray.toJSONString(resultMap);
     }
+
     @RequestMapping(value = "/pwdsave.html")
-    public String pwdSave(@RequestParam(value = "newpassword") String newPassword,HttpSession session){
-        User user = ((User)session.getAttribute(Constants.USER_SESSION));
-        if (null != user){
+    public String pwdSave(@RequestParam(value = "newpassword") String newPassword, HttpSession session) {
+        User user = ((User) session.getAttribute(Constants.USER_SESSION));
+        if (null != user) {
             boolean flag = userService.updatePwd(user.getId(), newPassword);
-            if (flag){
+            if (flag) {
                 return "login";
-            }else{
+            } else {
                 return "user/pwdmodify";
             }
-        }else{
+        } else {
             return "login";
         }
     }
-    @RequestMapping(value = "/getrolelist.json" ,method = RequestMethod.POST)
+
+    @RequestMapping(value = "/getrolelist", method = RequestMethod.POST)
     @ResponseBody
-    public  Object getrolelist(){
+    public Object getrolelist() {
         List<Role> roleList = roleService.getRoleList();
-//        String list=   JSONArray.toJSONString(roleList);
         return roleList;
 
+    }
+
+    @RequestMapping(value = "/delUser", method = RequestMethod.POST)
+    @ResponseBody
+    public Object delUser(Integer id,HttpServletRequest request) {
+        HashMap<String, String> resultMap = new HashMap<>();
+        String path =
+                request.getSession().getServletContext().getRealPath("statics" + File.separator + "uploadfiles");
+        User user = userService.getUserById(id.toString());
+        if (!"".equals(user.getWorkPicPath())) {
+            File file = new File(path+File.separator+user.getWorkPicPath());
+            file.delete();
+        }
+        if (null != user.getIdPicPath()){
+            File file = new File(path+File.separator+user.getIdPicPath());
+            file.delete();
+        }
+        boolean flag = userService.deleteUserById(id);
+        if (flag){
+            resultMap.put("delResult","true");
+        }else {
+            resultMap.put("delResult","false");
+        }
+        return resultMap;
     }
 }

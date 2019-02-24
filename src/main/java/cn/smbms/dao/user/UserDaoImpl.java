@@ -155,6 +155,8 @@ public class UserDaoImpl implements UserDao{
 				user.setModifyBy(rs.getInt("modifyBy"));
 				user.setModifyDate(rs.getTimestamp("modifyDate"));
 				user.setUserRoleName(rs.getString("userRoleName"));
+				user.setWorkPicPath(rs.getString("workPicPath"));
+				user.setIdPicPath(rs.getString("idPicPath"));
 			}
 			BaseDao.closeResource(null, pstm, rs);
 		}
