@@ -12,8 +12,8 @@
         http://www.springframework.org/schema/mvc
         http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
-    <!--<mvc:annotation-driven/>-->
     <context:component-scan base-package="cn.smbms.controller"/>
+    <!--静态文件访问-->
     <mvc:default-servlet-handler/>
     <!--配置多视图解析器：允许同样的内容数据呈现不同的view-->
     <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
@@ -83,6 +83,7 @@
             </bean>
         </mvc:message-converters>
     </mvc:annotation-driven>
+
     <!--自定义系统拦截器-->
     <mvc:interceptors>
         <mvc:interceptor>

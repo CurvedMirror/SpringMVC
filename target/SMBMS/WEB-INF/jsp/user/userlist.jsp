@@ -7,7 +7,7 @@
 		<span>用户管理页面</span>
 	</div>
 	<div class="search">
-		<form method="post" action="${pageContext.request.contextPath }/user/userlist.html">
+		<form method="post" action="${pageContext.request.contextPath }/sys/user/userlist.html">
 			<input name="method" value="query" class="input-text" type="hidden">
 			<span>用户名：</span>
 			<input name="queryname" class="input-text"	type="text" value="${queryUserName }">
@@ -25,7 +25,7 @@
 
 			<input type="hidden" name="pageIndex" value="1"/>
 			<input	value="查 询" type="submit" id="searchbutton">
-			<a href="${pageContext.request.contextPath}/user/useradd.html" >添加用户</a>
+			<a href="${pageContext.request.contextPath}/sys/user/useradd.html" >添加用户</a>
 		</form>
 	</div>
 	<!--用户-->

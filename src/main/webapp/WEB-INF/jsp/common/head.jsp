@@ -30,11 +30,11 @@
          <h2 class="leftH2"><span class="span1"></span>功能列表 <span></span></h2>
          <nav>
              <ul class="list">
-                 <li ><a href="${pageContext.request.contextPath }/jsp/bill.do?method=query">订单管理</a></li>
-              <li><a href="${pageContext.request.contextPath }/provider/providerList.html">供应商管理</a></li>
-              <li><a href="${pageContext.request.contextPath }/user/userlist.html">用户管理</a></li>
-              <li><a href="${pageContext.request.contextPath }/user/pwdmodify.html">密码修改</a></li>
-              <li><a href="${pageContext.request.contextPath }/user/logout.html">退出系统</a></li>
+                  <li ><a href="${pageContext.request.contextPath }/jsp/bill.do?method=query">订单管理</a></li>
+                  <li><a href="${pageContext.request.contextPath }/sys/provider/providerList.html">供应商管理</a></li>
+                  <li><a href="${pageContext.request.contextPath }/sys/user/userlist.html">用户管理</a></li>
+                  <li><a href="${pageContext.request.contextPath }/sys/user/pwdmodify.html">密码修改</a></li>
+                  <li><a href="${pageContext.request.contextPath }/logout.html">退出系统</a></li>
              </ul>
          </nav>
      </div>

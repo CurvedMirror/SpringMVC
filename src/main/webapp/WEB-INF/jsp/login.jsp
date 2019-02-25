@@ -18,7 +18,7 @@
         <h1>超市订单管理系统</h1>
     </header>
     <section class="loginCont">
-        <form class="loginForm" action="${pageContext.request.contextPath }/user/dologin.html"  name="actionForm" id="actionForm"  method="post" >
+        <form class="loginForm" action="${pageContext.request.contextPath }/dologin.html"  name="actionForm" id="actionForm"  method="post" >
             <div class="info">${exception.message}</div>
             <div class="inputbox">
                 <label for="user">用户名：</label>

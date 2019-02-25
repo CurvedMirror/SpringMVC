@@ -6,9 +6,8 @@ import javax.servlet.http.HttpSession;
 import cn.smbms.pojo.Role;
 import cn.smbms.service.role.RoleService;
 import cn.smbms.tools.PageSupport;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.mysql.cj.util.StringUtils;
+import com.mysql.jdbc.StringUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.apache.log4j.Logger;
@@ -23,8 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -33,22 +30,24 @@ import java.util.List;
  * @author Administrator
  */
 @Controller
-@RequestMapping("/user")
+@RequestMapping("/sys/user")
 public class UserController {
     private Logger logger = Logger.getLogger(UserController.class);
 
     @Autowired
     private UserService userService;
+
     @Autowired
     private RoleService roleService;
 
-    @RequestMapping(value = "/login.html")
+    /*@RequestMapping(value = "/login.html")
     public String login() {
         logger.debug("UserController welcome SMBMS==================");
         return "login";
-    }
+    }*/
 
-    @RequestMapping(value = "/dologin.html", method = RequestMethod.POST)
+
+    /*@RequestMapping(value = "/dologin.html", method = RequestMethod.POST)
     public String doLogin(@RequestParam String userCode, @RequestParam String userPassword, HttpServletRequest request, HttpSession session) {
         logger.debug("doLogin====================================");
         User user = userService.login(userCode, userPassword);
@@ -59,17 +58,17 @@ public class UserController {
         }
         session.setAttribute(Constants.USER_SESSION, user);
         return "redirect:/user/main.html";
-    }
+    }*/
 
-    @RequestMapping(value = "/main.html")
+  /*  @RequestMapping(value = "/main.html")
     public String main(HttpSession session) {
         if (session.getAttribute(Constants.USER_SESSION) == null) {
             return "redirect:/user/login.html";
         }
         return "frame";
-    }
+    }*/
 
-    @RequestMapping(value = "/exlogin.html", method = RequestMethod.GET)
+ /*   @RequestMapping(value = "/exlogin.html", method = RequestMethod.GET)
     public String exLogin(@RequestParam String userCode, @RequestParam String userPassword) {
         logger.debug("exLogin====================================");
         //调用service方法，进行用户匹配
@@ -79,7 +78,7 @@ public class UserController {
             throw new RuntimeException("用户名或者密码不正确！");
         }
         return "redirect:/user/main.html";
-    }
+    }*/
 
 
 	/*@ExceptionHandler(value = {RuntimeException.class})
@@ -88,12 +87,12 @@ public class UserController {
 		return "login";
 	}*/
 
-    @RequestMapping(value = "/logout.html")
+ /*   @RequestMapping(value = "/logout.html")
     public String logout(HttpSession session) {
         //清除session
         session.invalidate();
         return "login";
-    }
+    }*/
 
     @RequestMapping(value = "/userlist.html")
     public String getUserList(Model model,
@@ -128,6 +127,7 @@ public class UserController {
                 return "redirect:/user/syserror.html";
             }
         }
+        System.out.println(_queryUserRole);
         //总数量（表）
         int totalCount = userService.getUserCount(queryUserName, _queryUserRole);
         //总页数
@@ -232,14 +232,18 @@ public class UserController {
             user.setCreationDate(new Date());
             user.setIdPicPath(idPicPath);
             user.setWorkPicPath(workPicPath);
-            if (userService.add(user)) {
-                return "redirect:/user/userlist.html";
+            try {
+                if (userService.smbmsAdd(user)) {
+                    return "redirect:/sys/user/userlist.html";
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         return "user/useradd";
     }
 
-    @RequestMapping(value = "/ucexist.html")
+    @RequestMapping(value = "/ucexist",method = RequestMethod.POST)
     @ResponseBody
     public Object userCodeIsExit(@RequestParam String userCode) {
         HashMap<String, String> resultMap = new HashMap<>();
@@ -310,17 +314,6 @@ public class UserController {
     @ResponseBody
     public Object delUser(Integer id,HttpServletRequest request) {
         HashMap<String, String> resultMap = new HashMap<>();
-        String path =
-                request.getSession().getServletContext().getRealPath("statics" + File.separator + "uploadfiles");
-        User user = userService.getUserById(id.toString());
-        if (!"".equals(user.getWorkPicPath())) {
-            File file = new File(path+File.separator+user.getWorkPicPath());
-            file.delete();
-        }
-        if (null != user.getIdPicPath()){
-            File file = new File(path+File.separator+user.getIdPicPath());
-            file.delete();
-        }
         boolean flag = userService.deleteUserById(id);
         if (flag){
             resultMap.put("delResult","true");
@@ -329,4 +322,99 @@ public class UserController {
         }
         return resultMap;
     }
+    @RequestMapping(value="/modify/{id}",method=RequestMethod.GET)
+    public String getUserById(@PathVariable int id,Model model,HttpServletRequest request){
+        logger.debug("getProviderById id===================== "+id);
+        User user = userService.getUserById(id);
+        model.addAttribute(user);
+        return "user/usermodify";
+    }
+    @RequestMapping(value="/view/{id}",method=RequestMethod.GET)
+    public String view(@PathVariable int id,Model model,HttpServletRequest request){
+        logger.debug("view id===================== "+id);
+        User user = userService.getUserById(id);
+        model.addAttribute(user);
+        return "user/userview";
+    }
+    @RequestMapping(value = "/modifysave.html",method = RequestMethod.POST)
+    public String modify(User user,HttpSession session,HttpServletRequest request,
+                         @RequestParam(value = "attachs" ,required = false) MultipartFile[] attachs){
+
+        String idPicPath =null;
+        String workPicPath = null;
+        String errorInfo = null;
+        boolean flag = true;
+        String path = session.getServletContext().getRealPath("statics"+ File.separator+"uploadfiles");
+
+        for (int i = 0; i < attachs.length; i++) {
+            MultipartFile attach = attachs[i];
+            if (!attach.isEmpty()){
+                if (i==0){
+                    errorInfo ="uploadFileError";
+                }else{
+                    errorInfo ="uploadWpError";
+                }
+                String oldFileName = attach.getOriginalFilename();
+                int fileSize = 5000000;
+                String prefix = FilenameUtils.getExtension(oldFileName);
+
+                if (attach.getSize()> fileSize){
+                    request.setAttribute(errorInfo,"*上传大小不得超过500kb");
+                    return "user/usermodify";
+                }else if ("jpg".equalsIgnoreCase(prefix)
+                         || "png".equalsIgnoreCase(prefix)
+                        || "jpeg".equalsIgnoreCase(prefix)
+                        || "pneg".equalsIgnoreCase(prefix)){
+                    String fileName = System.currentTimeMillis()+
+                            RandomUtils.nextInt(1000000)+"_user.jpg";
+                    File targetFile = new File(path,fileName);
+
+                    if (!targetFile.exists()){
+                        targetFile.mkdirs();
+                    }else{
+                        if(user.getIdPicPath() != null && !"".equals(user.getIdPicPath())){
+                            //删除服务器上个人证件照
+                            File file = new File(path+user.getIdPicPath());
+                            if(file.exists()){
+                                flag = file.delete();
+                            }
+                        }
+                        if(flag && user.getWorkPicPath() != null && !"".equals(user.getWorkPicPath())){
+                            //删除服务器上个人工作证照片
+                            File file = new File(path+user.getWorkPicPath());
+                            if(file.exists()){
+                                flag = file.delete();
+                            }
+                        }
+                    }
+                    try {
+                        attach.transferTo(targetFile);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        request.setAttribute(errorInfo, "上传失败！");
+                        return "user/usermodify";
+                    }
+                    if (i == 0){
+                        idPicPath = fileName;
+                    }else {
+                        workPicPath = fileName;
+                    }
+                }else{
+                    request.setAttribute(errorInfo, "*上传图片格式不正确");
+                    return "user/usermodify";
+                }
+            }
+        }
+        if (flag){
+            user.setModifyDate(new Date());
+            user.setModifyBy(((User)session.getAttribute(Constants.USER_SESSION)).getId());
+            user.setIdPicPath(idPicPath);
+            user.setWorkPicPath(workPicPath);
+            if (userService.modify(user)){
+                return "redirect:/sys/user/userlist.html";
+            }
+        }
+        return "user/usermodify";
+    }
+
 }

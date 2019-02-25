@@ -16,7 +16,8 @@ import javax.servlet.http.HttpSession;
 public class SysInterceptor extends HandlerInterceptorAdapter {
     private Logger logger = Logger.getLogger(SysInterceptor.class);
 
-    public boolean perHandle(HttpServletRequest request,
+    @Override
+    public boolean preHandle(HttpServletRequest request,
                              HttpServletResponse response,
                              Object handle) throws Exception {
         logger.debug("SysInterceptor preHandle");

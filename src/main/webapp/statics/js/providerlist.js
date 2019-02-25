@@ -3,9 +3,9 @@ var providerObj;
 //供应商管理页面上点击删除按钮弹出删除框(providerlist.jsp)
 function deleteProvider(obj){
 	$.ajax({
-		type:"GET",
-		url:path+"/jsp/provider.do",
-		data:{method:"delprovider",proid:obj.attr("proid")},
+		type:"POST",
+		url:path+"/sys/provider/delprovider.json",
+		data:{method:"delprovider",id:obj.attr("proid")},
 		dataType:"json",
 		success:function(data){
 			if(data.delResult == "true"){//删除成功：移除删除行
@@ -46,12 +46,12 @@ $(function(){
 	$(".viewProvider").on("click",function(){
 		//将被绑定的元素（a）转换成jquery对象，可以使用jquery方法
 		var obj = $(this);
-		window.location.href=path+"/provider/view/"+ obj.attr("proid");
+		window.location.href=path+"/sys/provider/view/"+ obj.attr("proid");
 	});
 	
 	$(".modifyProvider").on("click",function(){
 		var obj = $(this);
-		window.location.href=path+"/provider/modify/"+ obj.attr("proid");
+		window.location.href=path+"/sys/provider/modify/"+ obj.attr("proid");
 	});
 
 	$('#no').click(function () {

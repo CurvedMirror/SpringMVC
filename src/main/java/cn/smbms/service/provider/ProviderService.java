@@ -3,42 +3,59 @@ package cn.smbms.service.provider;
 import java.util.List;
 
 import cn.smbms.pojo.Provider;
+import org.apache.ibatis.annotations.Param;
 
 public interface ProviderService {
 	/**
-	 * 增加供应商
+	 * 增加供应商信息
 	 * @param provider
 	 * @return
+	 * @
 	 */
 	public boolean add(Provider provider);
 
+	/**
+	 * 通过条件查询-providerList
+	 * @param proName
+	 * @param proCode
+	 * @param currentPageNo
+	 * @param pageSize
+	 * @return
+	 * @
+	 */
+	public List<Provider> getProviderList(@Param("proName") String proName, @Param("proCode") String proCode,
+										  @Param("from") Integer currentPageNo, @Param("pageSize") Integer pageSize);
 
 	/**
-	 * 通过供应商名称、编码获取供应商列表-模糊查询-providerList
+	 * 通过条件查询-供应商表记录数
 	 * @param proName
+	 * @param proCode
 	 * @return
+	 * @
 	 */
-	public List<Provider> getProviderList(String proName, String proCode);
-	
+	public int getProviderCount(@Param("proName") String proName, @Param("proCode") String proCode);
+
 	/**
-	 * 通过proId删除Provider
+	 * 通过供应商id删除供应商信息
 	 * @param delId
 	 * @return
+	 * @
 	 */
-	public int deleteProviderById(String delId);
-	
-	
+	public boolean smbmsDeleteProviderById(@Param("id") Integer delId);
+
 	/**
-	 * 通过proId获取Provider
+	 * 根据provider id 获取供应商信息
 	 * @param id
 	 * @return
+	 * @
 	 */
-	public Provider getProviderById(String id);
-	
+	public Provider getProviderById(@Param("id") Integer id);
+
 	/**
-	 * 修改用户信息
-	 * @param user
+	 * 修改供应商
+	 * @param provider
 	 * @return
+	 * @
 	 */
 	public boolean modify(Provider provider);
 	

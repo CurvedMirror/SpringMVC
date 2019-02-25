@@ -7,11 +7,23 @@ import java.util.List;
 import cn.smbms.dao.BaseDao;
 import cn.smbms.dao.bill.BillDao;
 import cn.smbms.dao.bill.BillDaoImpl;
+import cn.smbms.dao.bill.BillMapper;
 import cn.smbms.pojo.Bill;
 import cn.smbms.pojo.Provider;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+
+/**
+ * @author Administrator
+ */
+@Service
 public class BillServiceImpl implements BillService {
-	
+
+	@Autowired
+	private BillMapper billMapper ;
+
 	private BillDao billDao;
 	public BillServiceImpl(){
 		billDao = new BillDaoImpl();
@@ -24,8 +36,9 @@ public class BillServiceImpl implements BillService {
 		try {
 			connection = BaseDao.getConnection();
 			connection.setAutoCommit(false);//开启JDBC事务管理
-			if(billDao.add(connection,bill) > 0)
-				flag = true;
+			if(billDao.add(connection,bill) > 0) {
+                flag = true;
+            }
 			connection.commit();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -72,8 +85,9 @@ public class BillServiceImpl implements BillService {
 		boolean flag = false;
 		try {
 			connection = BaseDao.getConnection();
-			if(billDao.deleteBillById(connection, delId) > 0)
-				flag = true;
+			if(billDao.deleteBillById(connection, delId) > 0) {
+                flag = true;
+            }
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -108,8 +122,9 @@ public class BillServiceImpl implements BillService {
 		boolean flag = false;
 		try {
 			connection = BaseDao.getConnection();
-			if(billDao.modify(connection,bill) > 0)
-				flag = true;
+			if(billDao.modify(connection,bill) > 0) {
+                flag = true;
+            }
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -117,6 +132,12 @@ public class BillServiceImpl implements BillService {
 			BaseDao.closeResource(connection, null, null);
 		}
 		return flag;
+	}
+
+	@Override
+	public int getBillCountByProviderId(Integer providerId) {
+        System.out.println(billMapper);
+		return billMapper.getBillCountByProviderId(providerId);
 	}
 
 }

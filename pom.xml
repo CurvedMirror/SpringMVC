@@ -29,7 +29,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.15</version>
+            <version>5.1.28</version>
         </dependency>
 
         <!--EL和JSTL-->
@@ -100,6 +100,54 @@
             <artifactId>commons-fileupload</artifactId>
             <version>1.2.2</version>
         </dependency>
+
+        <!-- 导入dbcp的jar包，用来在spring-mybatis.xml中配置数据库 -->
+        <dependency>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+            <version>1.4</version>
+        </dependency>
+
+        <!--对Spring 对JDBC 数据访问进行封装的所有类-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>3.2.13.RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>3.2.13.RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.6.9</version>
+        </dependency>
+        <!--mybatis-spring整合包，这样就可以通过spring配置bean的方式进行mybatis配置了，
+        不然需要单独使用mybatis的配置-->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis-spring</artifactId>
+            <version>1.2.2</version>
+        </dependency>
+
+        <!--引入aspectjweaver-->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.6.9</version>
+        </dependency>
+
+        <!--引入mybatis3.2.2-->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>3.2.2</version>
+        </dependency>
+
     </dependencies>
     <build>
         <finalName>SMBMS</finalName>
@@ -136,5 +184,18 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+        <!--编译时增加xml文件-->
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
     </build>
 </project>

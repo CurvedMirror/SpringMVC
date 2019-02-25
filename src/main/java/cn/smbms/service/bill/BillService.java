@@ -3,6 +3,7 @@ package cn.smbms.service.bill;
 import java.util.List;
 
 import cn.smbms.pojo.Bill;
+import org.apache.ibatis.annotations.Param;
 
 public interface BillService {
 	/**
@@ -41,5 +42,13 @@ public interface BillService {
 	 * @return
 	 */
 	public boolean modify(Bill bill);
+
+	/**
+	 * 根据供应商ID查询订单数量
+	 * @param providerId
+	 * @return
+	 * @
+	 */
+	public int getBillCountByProviderId(@Param("providerId") Integer providerId);
 	
 }

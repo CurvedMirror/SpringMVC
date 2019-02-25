@@ -2,9 +2,11 @@ package cn.smbms.controller;
 
 import cn.smbms.pojo.Provider;
 import cn.smbms.pojo.User;
+import cn.smbms.service.bill.BillService;
 import cn.smbms.service.provider.ProviderService;
 import cn.smbms.tools.Constants;
-import com.mysql.cj.util.StringUtils;
+import cn.smbms.tools.PageSupport;
+import com.mysql.jdbc.StringUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.apache.log4j.Logger;
@@ -21,14 +23,16 @@ import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author jie
  * @date 2019/2/16 -8:27
  */
 @Controller
-@RequestMapping("/provider")
+@RequestMapping("/sys/provider")
 public class ProviderController {
 
     private Logger logger = Logger.getLogger(ProviderController.class);
@@ -36,22 +40,69 @@ public class ProviderController {
     @Autowired
     private ProviderService providerService;
 
+    @Autowired
+    private BillService billService;
+
     @RequestMapping("/providerList.html")
     public String getProviderList(Model model,
-                                  @RequestParam(value = "queryProCode", required = false) String queryProCode,
-                                  @RequestParam(value = "queryProName", required = false) String queryProName) {
-        if (StringUtils.isNullOrEmpty(queryProName)) {
-            queryProName = "";
-        }
-        if (StringUtils.isNullOrEmpty(queryProCode)) {
+                                  @RequestParam(value="queryProCode",required=false) String queryProCode,
+                                  @RequestParam(value="queryProName",required=false) String queryProName,
+                                  @RequestParam(value="pageIndex",required=false) String pageIndex){
+        logger.info("getProviderList ---- > queryProCode: " + queryProCode);
+        logger.info("getProviderList ---- > queryProName: " + queryProName);
+        logger.info("getProviderList ---- > pageIndex: " + pageIndex);
+        List<Provider> providerList = null;
+        //设置页面容量
+        int pageSize = Constants.pageSize;
+        //当前页码
+        int currentPageNo = 1;
+
+        if(queryProCode == null){
             queryProCode = "";
         }
-        List<Provider> providerList = providerService.getProviderList(queryProName, queryProCode);
+        if(queryProName == null){
+            queryProName = "";
+        }
+        if(pageIndex != null){
+            try{
+                currentPageNo = Integer.valueOf(pageIndex);
+            }catch(NumberFormatException e){
+                return "redirect:/sys/provider/syserror.html";
+            }
+        }
+        //总数量（表）
+        int totalCount = 0;
+        try {
+            totalCount = providerService.getProviderCount(queryProCode,queryProName);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //总页数
+        PageSupport pages=new PageSupport();
+        pages.setCurrentPageNo(currentPageNo);
+        pages.setPageSize(pageSize);
+        pages.setTotalCount(totalCount);
+        int totalPageCount = pages.getTotalPageCount();
+        //控制首页和尾页
+        if(currentPageNo < 1){
+            currentPageNo = 1;
+        }else if(currentPageNo > totalPageCount){
+            currentPageNo = totalPageCount;
+        }
+        try {
+            providerList = providerService.getProviderList(queryProName,queryProCode,currentPageNo, pageSize);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         model.addAttribute("providerList", providerList);
-        model.addAttribute("queryProName", queryProName);
         model.addAttribute("queryProCode", queryProCode);
+        model.addAttribute("queryProName", queryProName);
+        model.addAttribute("totalPageCount", totalPageCount);
+        model.addAttribute("totalCount", totalCount);
+        model.addAttribute("currentPageNo", currentPageNo);
         return "provider/providerlist";
     }
+
 
     @RequestMapping(value = "/syserror.html")
     public String sysError() {
@@ -94,7 +145,7 @@ public class ProviderController {
                 String prefix = FilenameUtils.getExtension(oldFileName);
 
                 if (attach.getSize() > fileSize) {
-                    request.setAttribute("uploadFileError", "*上传大小不得超过500kb");
+                    request.setAttribute(errorInfo, "*上传大小不得超过500kb");
                     return "provider/provideradd";
                 } else if ("jpg".equalsIgnoreCase(prefix)
                         || "png".equalsIgnoreCase(prefix)
@@ -131,14 +182,14 @@ public class ProviderController {
             provider.setCreatedBy(((User) session.getAttribute(Constants.USER_SESSION)).getId());
             provider.setCreationDate(new Date());
             if (providerService.add(provider)) {
-                return "redirect:/provider/providerList.html";
+                return "redirect:/sys/provider/providerList.html";
             }
         }
         return "provider/provideradd";
     }
 
     @RequestMapping(value = "/view/{id}", method = RequestMethod.GET)
-    public String view(@PathVariable String id, Model model) {
+    public String view(@PathVariable int id, Model model) {
         logger.debug("view id===============" + id);
         Provider provider = providerService.getProviderById(id);
         model.addAttribute(provider);
@@ -146,7 +197,7 @@ public class ProviderController {
     }
 
     @RequestMapping(value = "/modify/{id}", method = RequestMethod.GET)
-    public String modify(@PathVariable String id, Model model) {
+    public String modify(@PathVariable int id, Model model) {
         logger.debug("view id===============" + id);
         Provider provider = providerService.getProviderById(id);
         model.addAttribute(provider);
@@ -154,14 +205,35 @@ public class ProviderController {
     }
 
     @RequestMapping(value = "/providermodifysava.html", method = RequestMethod.POST)
-    public String modifyUserSave(Provider provider, HttpSession session) {
-        System.out.println(provider);
+    public String modifyUserSave(Provider provider) {
         logger.debug("modifyUserSave userid===============" + provider.getId());
         provider.setModifyDate(new Date());
         if (providerService.modify(provider)) {
-            return "redirect:/provider/providerList.html";
+            return "redirect:/sys/provider/providerList.html";
         }
         return "provider/providermodify";
+    }
+
+    @RequestMapping(value = "/delprovider",method = RequestMethod.POST)
+    @ResponseBody
+    public Object delprovider(int id){
+        HashMap<String,String> resultMap = new HashMap<>();
+        if(!StringUtils.isNullOrEmpty(String.valueOf(id))){
+
+            int billCountByProviderId = billService.getBillCountByProviderId(id);
+            if (billCountByProviderId != 0){
+                resultMap.put("delResult", String.valueOf(billCountByProviderId));
+            }else{
+                if (providerService.smbmsDeleteProviderById(id)){
+                    resultMap.put("delResult","true");
+                }else{
+                    resultMap.put("delResult","false");
+                }
+            }
+        }else{
+            resultMap.put("delResult","notexist");
+        }
+        return resultMap;
     }
 
 }

@@ -7,9 +7,11 @@
             <span>用户管理页面 >> 用户修改页面</span>
         </div>
         <div class="providerAdd">
-        <form id="userForm" name="userForm" method="post" action="${pageContext.request.contextPath }/jsp/user.do">
+        <form id="userForm" name="userForm" method="post" action="${pageContext.request.contextPath }/sys/user/modifysave.html"
+                    enctype="multipart/form-data">
+
 			<input type="hidden" name="method" value="modifyexe">
-			<input type="hidden" name="uid" value="${user.id }"/>
+			<input type="hidden" name="id" value="${user.id }"/>
 			 <div>
                     <label for="userName">用户名称：</label>
                     <input type="text" name="userName" id="userName" value="${user.userName }"> 
@@ -53,6 +55,32 @@
 					<select name="userRole" id="userRole"></select>
         			<font color="red"></font>
                 </div>
+            <div>
+                <label for="m_idPicPath">证件照：</label>
+                <c:choose>
+                    <c:when test="${user.idPicPath == null || user.idPicPath == ''}">
+                        <input type="hidden" id="errorinfo" value="${uploadFileError}"/>
+                        <input type="file" name="attachs" id="m_idPicPath"/>
+                        <font color="red"></font>
+                    </c:when>
+                    <c:otherwise>
+                        <img src="${pageContext.request.contextPath}/statics/uploadfiles/${user.idPicPath}"/>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+            <div>
+                <label for="m_workPicPath">工作证照片：</label>
+                <c:choose>
+                    <c:when test="${user.workPicPath == null || user.workPicPath == ''}">
+                        <input type="hidden" id="errorinfo_wp" value="${uploadWpError}"/>
+                        <input type="file" name="attachs" id="m_workPicPath"/>
+                        <font color="red"></font>
+                    </c:when>
+                    <c:otherwise>
+                        <img src="${pageContext.request.contextPath}/statics/uploadfiles/${user.workPicPath}"/>
+                    </c:otherwise>
+                </c:choose>
+            </div>
 			 <div class="providerAddBtn">
                     <input type="button" name="save" id="save" value="保存" />
                     <input type="button" id="back" name="back" value="返回"/>
