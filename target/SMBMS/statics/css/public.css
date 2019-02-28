@@ -149,6 +149,9 @@ li{
     background: url("../images/mm.png") 0  center no-repeat;
 }
 .list li:nth-child(5){
+    background: url("../images/xiugai.png") 0  center no-repeat;
+}
+.list li:nth-child(6){
     background: url("../images/tc.png") 0  center no-repeat;
 }
 .list li:hover{

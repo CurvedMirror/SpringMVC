@@ -3,7 +3,6 @@ package cn.smbms.service.provider;
 import java.io.File;
 import java.util.List;
 
-import cn.smbms.dao.bill.BillMapper;
 import cn.smbms.dao.provider.ProviderMapper;
 import cn.smbms.pojo.Provider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +15,8 @@ import org.springframework.stereotype.Service;
 public class ProviderServiceImpl implements ProviderService {
 
     @Autowired
-    private ProviderMapper providerMapper;
+    protected ProviderMapper providerMapper;
 
-    @Autowired
-    private BillMapper billMapper;
 
     @Override
     public boolean add(Provider provider) {
@@ -74,5 +71,11 @@ public class ProviderServiceImpl implements ProviderService {
     @Override
     public boolean modify(Provider provider) {
         return providerMapper.modify(provider);
+    }
+
+    @Override
+    public List<Provider> getProList() {
+
+        return providerMapper.getProList();
     }
 }

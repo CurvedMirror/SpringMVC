@@ -8,7 +8,7 @@
           <span>供应商管理页面 >> 供应商修改页</span>
       </div>
       <div class="providerAdd">
-          <form id="providerForm" name="providerForm" method="post" action="${pageContext.request.contextPath }/provider/providermodifysava.html">
+          <form id="providerForm" name="providerForm" method="post" action="${pageContext.request.contextPath }/sys/provider/providermodifysava.html">
               <input type="hidden" name="id" value="${provider.id }"/>
               <!--div的class 为error是验证错误，ok是验证成功-->
               <div class="">

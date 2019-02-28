@@ -127,7 +127,6 @@ public class UserController {
                 return "redirect:/user/syserror.html";
             }
         }
-        System.out.println(_queryUserRole);
         //总数量（表）
         int totalCount = userService.getUserCount(queryUserName, _queryUserRole);
         //总页数
@@ -243,7 +242,7 @@ public class UserController {
         return "user/useradd";
     }
 
-    @RequestMapping(value = "/ucexist",method = RequestMethod.POST)
+    @RequestMapping(value = "/ucexist", method = RequestMethod.POST)
     @ResponseBody
     public Object userCodeIsExit(@RequestParam String userCode) {
         HashMap<String, String> resultMap = new HashMap<>();
@@ -312,105 +311,109 @@ public class UserController {
 
     @RequestMapping(value = "/delUser", method = RequestMethod.POST)
     @ResponseBody
-    public Object delUser(Integer id,HttpServletRequest request) {
+    public Object delUser(Integer id, HttpServletRequest request) {
         HashMap<String, String> resultMap = new HashMap<>();
         boolean flag = userService.deleteUserById(id);
-        if (flag){
-            resultMap.put("delResult","true");
-        }else {
-            resultMap.put("delResult","false");
+        if (flag) {
+            resultMap.put("delResult", "true");
+        } else {
+            resultMap.put("delResult", "false");
         }
         return resultMap;
     }
-    @RequestMapping(value="/modify/{id}",method=RequestMethod.GET)
-    public String getUserById(@PathVariable int id,Model model,HttpServletRequest request){
-        logger.debug("getProviderById id===================== "+id);
+
+    @RequestMapping(value = "/modify/{id}", method = RequestMethod.GET)
+    public String getUserById(@PathVariable int id, Model model, HttpServletRequest request) {
+        logger.debug("getProviderById id===================== " + id);
         User user = userService.getUserById(id);
         model.addAttribute(user);
         return "user/usermodify";
     }
-    @RequestMapping(value="/view/{id}",method=RequestMethod.GET)
-    public String view(@PathVariable int id,Model model,HttpServletRequest request){
-        logger.debug("view id===================== "+id);
+
+    @RequestMapping(value = "/view/{id}", method = RequestMethod.GET)
+    public String view(@PathVariable int id, Model model, HttpServletRequest request) {
+        logger.debug("view id===================== " + id);
         User user = userService.getUserById(id);
         model.addAttribute(user);
         return "user/userview";
     }
-    @RequestMapping(value = "/modifysave.html",method = RequestMethod.POST)
-    public String modify(User user,HttpSession session,HttpServletRequest request,
-                         @RequestParam(value = "attachs" ,required = false) MultipartFile[] attachs){
 
-        String idPicPath =null;
+    @RequestMapping(value = "/modifysave.html", method = RequestMethod.POST)
+    public String modify(User user, HttpSession session, HttpServletRequest request,
+                         @RequestParam(value = "attachs", required = false) MultipartFile[] attachs) {
+
+        String idPicPath = null;
         String workPicPath = null;
         String errorInfo = null;
         boolean flag = true;
-        String path = session.getServletContext().getRealPath("statics"+ File.separator+"uploadfiles");
-
-        for (int i = 0; i < attachs.length; i++) {
-            MultipartFile attach = attachs[i];
-            if (!attach.isEmpty()){
-                if (i==0){
-                    errorInfo ="uploadFileError";
-                }else{
-                    errorInfo ="uploadWpError";
-                }
-                String oldFileName = attach.getOriginalFilename();
-                int fileSize = 5000000;
-                String prefix = FilenameUtils.getExtension(oldFileName);
-
-                if (attach.getSize()> fileSize){
-                    request.setAttribute(errorInfo,"*上传大小不得超过500kb");
-                    return "user/usermodify";
-                }else if ("jpg".equalsIgnoreCase(prefix)
-                         || "png".equalsIgnoreCase(prefix)
-                        || "jpeg".equalsIgnoreCase(prefix)
-                        || "pneg".equalsIgnoreCase(prefix)){
-                    String fileName = System.currentTimeMillis()+
-                            RandomUtils.nextInt(1000000)+"_user.jpg";
-                    File targetFile = new File(path,fileName);
-
-                    if (!targetFile.exists()){
-                        targetFile.mkdirs();
-                    }else{
-                        if(user.getIdPicPath() != null && !"".equals(user.getIdPicPath())){
-                            //删除服务器上个人证件照
-                            File file = new File(path+user.getIdPicPath());
-                            if(file.exists()){
-                                flag = file.delete();
-                            }
-                        }
-                        if(flag && user.getWorkPicPath() != null && !"".equals(user.getWorkPicPath())){
-                            //删除服务器上个人工作证照片
-                            File file = new File(path+user.getWorkPicPath());
-                            if(file.exists()){
-                                flag = file.delete();
-                            }
-                        }
+        String path = session.getServletContext().getRealPath("statics" + File.separator + "uploadfiles");
+        if (attachs != null) {
+            for (int i = 0; i < attachs.length; i++) {
+                MultipartFile attach = attachs[i];
+                if (!attach.isEmpty()) {
+                    if (i == 0) {
+                        errorInfo = "uploadFileError";
+                    } else {
+                        errorInfo = "uploadWpError";
                     }
-                    try {
-                        attach.transferTo(targetFile);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        request.setAttribute(errorInfo, "上传失败！");
+                    String oldFileName = attach.getOriginalFilename();
+                    int fileSize = 5000000;
+                    String prefix = FilenameUtils.getExtension(oldFileName);
+
+                    if (attach.getSize() > fileSize) {
+                        request.setAttribute(errorInfo, "*上传大小不得超过500kb");
+                        return "user/usermodify";
+                    } else if ("jpg".equalsIgnoreCase(prefix)
+                            || "png".equalsIgnoreCase(prefix)
+                            || "jpeg".equalsIgnoreCase(prefix)
+                            || "pneg".equalsIgnoreCase(prefix)) {
+                        String fileName = System.currentTimeMillis() +
+                                RandomUtils.nextInt(1000000) + "_user.jpg";
+                        File targetFile = new File(path, fileName);
+
+                        if (!targetFile.exists()) {
+                            targetFile.mkdirs();
+                        } else {
+                            if (user.getIdPicPath() != null && !"".equals(user.getIdPicPath())) {
+                                //删除服务器上个人证件照
+                                File file = new File(path + user.getIdPicPath());
+                                if (file.exists()) {
+                                    flag = file.delete();
+                                }
+                            }
+                            if (flag && user.getWorkPicPath() != null && !"".equals(user.getWorkPicPath())) {
+                                //删除服务器上个人工作证照片
+                                File file = new File(path + user.getWorkPicPath());
+                                if (file.exists()) {
+                                    flag = file.delete();
+                                }
+                            }
+                        }
+                        try {
+                            attach.transferTo(targetFile);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            request.setAttribute(errorInfo, "上传失败！");
+                            return "user/usermodify";
+                        }
+                        if (i == 0) {
+                            idPicPath = fileName;
+                        } else {
+                            workPicPath = fileName;
+                        }
+                    } else {
+                        request.setAttribute(errorInfo, "*上传图片格式不正确");
                         return "user/usermodify";
                     }
-                    if (i == 0){
-                        idPicPath = fileName;
-                    }else {
-                        workPicPath = fileName;
-                    }
-                }else{
-                    request.setAttribute(errorInfo, "*上传图片格式不正确");
-                    return "user/usermodify";
                 }
             }
         }
-        if (flag){
+        if (flag) {
             user.setModifyDate(new Date());
-            user.setModifyBy(((User)session.getAttribute(Constants.USER_SESSION)).getId());
+            user.setModifyBy(((User) session.getAttribute(Constants.USER_SESSION)).getId());
             user.setIdPicPath(idPicPath);
             user.setWorkPicPath(workPicPath);
-            if (userService.modify(user)){
+            if (userService.modify(user)) {
                 return "redirect:/sys/user/userlist.html";
             }
         }

@@ -20,7 +20,15 @@ public class User {
 	private Date modifyDate;   //更新时间
 	private String idPicPath;//证件照路径
 	private  String workPicPath;//工作证照片路径
+	private Date aa;
 
+	public Date getAa() {
+		return aa;
+	}
+
+	public void setAa(Date aa) {
+		this.aa = aa;
+	}
 
 	private Integer age;//年龄
 

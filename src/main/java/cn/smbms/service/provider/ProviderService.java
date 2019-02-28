@@ -58,5 +58,8 @@ public interface ProviderService {
 	 * @
 	 */
 	public boolean modify(Provider provider);
-	
+
+	List<Provider> getProList();
+
+
 }

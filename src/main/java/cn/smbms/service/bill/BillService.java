@@ -6,49 +6,52 @@ import cn.smbms.pojo.Bill;
 import org.apache.ibatis.annotations.Param;
 
 public interface BillService {
+
+	public List<Bill> getBillList(String productName,Integer providerId,
+								  Integer isPayment,Integer currentPageNo,Integer pageSize) ;
+
+
+	/**
+	 * 通过条件查询-订单表记录数
+	 * @param productName
+	 * @param providerId
+	 * @param isPayment
+	 * @return
+	 * @
+	 */
+	public int getBillCount(String productName,Integer providerId,Integer isPayment) ;
+
 	/**
 	 * 增加订单
 	 * @param bill
 	 * @return
+	 * @
 	 */
-	public boolean add(Bill bill);
+	public boolean add(Bill bill) ;
 
-
 	/**
-	 * 通过条件获取订单列表-模糊查询-billList
-	 * @param bill
-	 * @return
-	 */
-	public List<Bill> getBillList(Bill bill);
-	
-	/**
-	 * 通过billId删除Bill
-	 * @param delId
-	 * @return
-	 */
-	public boolean deleteBillById(String delId);
-	
-	
-	/**
-	 * 通过billId获取Bill
+	 * 通过id获取Bill
 	 * @param id
 	 * @return
+	 * @
 	 */
-	public Bill getBillById(String id);
-	
+	public Bill getBillById(Integer id) ;
+
 	/**
 	 * 修改订单信息
 	 * @param bill
 	 * @return
+	 * @
 	 */
-	public boolean modify(Bill bill);
+	public boolean modify(Bill bill) ;
 
 	/**
-	 * 根据供应商ID查询订单数量
-	 * @param providerId
+	 * 通过id删除订单信息
+	 * @param delId
 	 * @return
 	 * @
 	 */
-	public int getBillCountByProviderId(@Param("providerId") Integer providerId);
-	
+	public boolean deleteBillById(Integer delId) ;
+
+	int getBillCountByProviderId(Integer id);
 }
